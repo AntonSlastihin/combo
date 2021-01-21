@@ -1,29 +1,31 @@
-$(() => {
+let patern = "abcdefghijklmnopqrstuvwxyz";
+//чтобы он мог создавать уникальные строки по заданой длине
+//от 1 до 4 включительно
 
-    const input = $("input[type='date']");
-    let date = new Date().toLocaleDateString();
-    let time = date.split('.').reverse().join('-');
-    input.val(time);
-    input.attr('max', time);
-    input.on('change', () => {
-        getMoney();
-    });
-    getMoney();
-    function getMoney() {
-        $.ajax({
-            type: "GET",
-            url: "money.php",
-            data: {date: input.val().split('-').reverse().join('.')},
-            // dataType: "xml",
-        }).done(function (data){
-            let response = JSON.parse(data);
-            let body = "<table><tr><th>Валюта</th><th>Курс</th></tr>";
-            $.each(response.item, function (index, value){
-                body += `<tr><td>${value.title}</td><td>${value.description}</td></tr>`;
-            })
-            body += "</table>";
-            $('#content').html(body)
-        });
+// let start_letter = a
+// нужно будет удалить a
+
+function combo(array, arr = [], text = ''){
+    for (let i = 0; i < array.length; i++){
+        let str = text;
+        str += array[i];
+        let massive = array.slice();
+        massive.splice(i, 1);
+        if (!massive.length && !arr.includes(str)){
+            arr.push(str);
+            return arr;
+        } else {
+            arr = combo(massive, arr, str);
+        }
     }
-});
+    return arr;
+}
 
+let form = document.querySelector('form');
+let input = document.querySelector('input');
+let result = document.querySelector('#result');
+form.addEventListener('submit', function (e){
+    e.preventDefault();
+
+    result.innerHTML = combo(input.value.split('')).join('<br>');
+});
