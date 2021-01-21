@@ -27,5 +27,5 @@ let result = document.querySelector('#result');
 form.addEventListener('submit', function (e){
     e.preventDefault();
 
-    result.innerHTML = combo(input.value.split('')).join('<br>');
+    console.log(combo(input.value.split('')));
 });
